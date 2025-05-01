@@ -690,10 +690,10 @@ locals {
     (local.hub_with_vcn == true || (local.hub_with_drg_only == true && (length(var.oke_vcn1_routable_vcns) == 0 || contains(var.oke_vcn1_routable_vcns, "TT-VCN-2")))) ? merge(
       {
         "INGRESS-FROM-OKE-VCN-1-WORKERS-SUBNET-RULE" = {
-          description  = "Ingress from ${coalesce(var.oke_vcn1_workers_subnet_name, "${var.service_label}-oke-vcn-1-workers-subnet")}."
+          description  = "Ingress from ${coalesce(var.oke_vcn1_workers_ad1_subnet_name, "${var.service_label}-oke-vcn-1-workers-subnet")}."
           stateless    = false
           protocol     = "TCP"
-          src          = coalesce(var.oke_vcn1_workers_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
+          src          = coalesce(var.oke_vcn1_workers_ad1_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
           src_type     = "CIDR_BLOCK"
           dst_port_min = 443
           dst_port_max = 443

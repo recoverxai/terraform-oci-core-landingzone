@@ -348,8 +348,8 @@ variableGroups:
       - "customize_oke_vcn1_subnets"
       - "oke_vcn1_services_subnet_name"
       - "oke_vcn1_services_subnet_cidr"
-      - "oke_vcn1_workers_subnet_name"
-      - "oke_vcn1_workers_subnet_cidr"
+      - "oke_vcn1_workers_ad1_subnet_name"
+      - "oke_vcn1_workers_ad1_subnet_cidr"
       - "oke_vcn1_api_subnet_name"
       - "oke_vcn1_api_subnet_cidr"
       - "oke_vcn1_pods_subnet_name"
@@ -2375,7 +2375,7 @@ variables:
         - customize_oke_vcn1_subnets
         - add_oke_vcn1
 
-  oke_vcn1_workers_subnet_name:
+  oke_vcn1_workers_ad1_subnet_name:
     type: string
     title: "Workers Subnet Name"
     description: "The workers subnet name."
@@ -2386,7 +2386,7 @@ variables:
         - customize_oke_vcn1_subnets
         - add_oke_vcn1
 
-  oke_vcn1_workers_subnet_cidr:
+  oke_vcn1_workers_ad1_subnet_cidr:
     type: string
     title: "Workers Subnet CIDR block"
     description: "It must be within the VCN CIDR blocks."

@@ -35,7 +35,7 @@ locals {
                 attached_resource_key = "HUB-VCN"
                 type                  = "VCN"
                 # HuB VCN ingress route table for the DRG. It defines how traffic that leaves the DRG is routed within the VCN.
-                route_table_key = (coalesce(var.hub_vcn_east_west_entry_point_ocid,local.void) != local.void || coalesce(var.oci_nfw_ip_ocid,local.void) != local.void) ? "HUB-VCN-INGRESS-ROUTE-TABLE" : null
+                route_table_key = (coalesce(var.hub_vcn_east_west_entry_point_ocid, local.void) != local.void || coalesce(var.oci_nfw_ip_ocid, local.void) != local.void) ? "HUB-VCN-INGRESS-ROUTE-TABLE" : null
               }
             }
           } : {},
@@ -214,13 +214,13 @@ locals {
               distribution_type = "IMPORT"
               statements = {
                 "MATCH-ALL-STMT" = {
-                  action = "ACCEPT",
-                     priority = 1,
-                     match_criteria = {
-                       match_type         = "MATCH_ALL"
-                     }
-                   }
+                  action   = "ACCEPT",
+                  priority = 1,
+                  match_criteria = {
+                    match_type = "MATCH_ALL"
+                  }
                 }
+              }
             }
           } : {},
           (local.add_tt_vcn1 == true && var.tt_vcn1_attach_to_drg == true) ? {

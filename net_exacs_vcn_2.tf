@@ -399,10 +399,10 @@ locals {
     (local.add_exa_vcn2 == true && var.exa_vcn2_attach_to_drg == true && var.add_oke_vcn1 == true && var.oke_vcn1_attach_to_drg == true) &&
     (local.hub_with_vcn == true || (local.hub_with_drg_only == true && (length(var.exa_vcn2_routable_vcns) == 0 || contains(var.exa_vcn2_routable_vcns, "OKE-VCN-1")))) ? {
       "EGRESS-TO-OKE-VCN-1-WORKERS-SUBNET-RULE" = {
-        description  = "Egress to ${coalesce(var.oke_vcn1_workers_subnet_name, "${var.service_label}-oke-vcn-1-workers-subnet")}."
+        description  = "Egress to ${coalesce(var.oke_vcn1_workers_ad1_subnet_name, "${var.service_label}-oke-vcn-1-workers-subnet")}."
         stateless    = false
         protocol     = "TCP"
-        dst          = coalesce(var.oke_vcn1_workers_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
+        dst          = coalesce(var.oke_vcn1_workers_ad1_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
         dst_type     = "CIDR_BLOCK"
         dst_port_min = 30000
         dst_port_max = 32767
@@ -540,7 +540,7 @@ locals {
         description  = "Ingress from ${coalesce(var.oke_vcn2_workers_subnet_name, "${var.service_label}-oke-vcn-2-workers-subnet")}."
         stateless    = false
         protocol     = "TCP"
-        src          = coalesce(var.oke_vcn1_workers_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
+        src          = coalesce(var.oke_vcn1_workers_ad1_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
         src_type     = "CIDR_BLOCK"
         dst_port_min = 1521
         dst_port_max = 1522

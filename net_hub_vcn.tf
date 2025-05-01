@@ -218,10 +218,10 @@ locals {
               }] : [],
               ## Egress to OKE VCN - SSH traffic
               var.add_oke_vcn1 == true && var.oke_vcn1_attach_to_drg == true && local.hub_with_vcn == true ? [{
-                description  = "Egress to ${coalesce(var.oke_vcn1_workers_subnet_name, "${var.service_label}-oke-vcn-1-workers-subnet")}."
+                description  = "Egress to ${coalesce(var.oke_vcn1_workers_ad1_subnet_name, "${var.service_label}-oke-vcn-1-workers-subnet")}."
                 stateless    = false
                 protocol     = "TCP"
-                dst          = coalesce(var.oke_vcn1_workers_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
+                dst          = coalesce(var.oke_vcn1_workers_ad1_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
                 dst_type     = "CIDR_BLOCK"
                 dst_port_min = 22
                 dst_port_max = 22
@@ -1042,10 +1042,10 @@ locals {
               ## Egress to OKE VCN - SSH traffic
               var.add_oke_vcn1 == true && var.oke_vcn1_attach_to_drg == true && local.hub_with_vcn == true && local.chosen_firewall_option == "NO" ? {
                 "EGRESS-TO-OKE-VCN-1-WORKERS-SUBNET-RULE" = {
-                  description  = "Egress to ${coalesce(var.oke_vcn1_workers_subnet_name, "${var.service_label}-oke-vcn-1-workers-subnet")}."
+                  description  = "Egress to ${coalesce(var.oke_vcn1_workers_ad1_subnet_name, "${var.service_label}-oke-vcn-1-workers-subnet")}."
                   stateless    = false
                   protocol     = "TCP"
-                  dst          = coalesce(var.oke_vcn1_workers_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
+                  dst          = coalesce(var.oke_vcn1_workers_ad1_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
                   dst_type     = "CIDR_BLOCK"
                   dst_port_min = 22
                   dst_port_max = 22
