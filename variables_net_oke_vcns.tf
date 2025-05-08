@@ -53,6 +53,11 @@ variable "oke_vcn1_api_subnet_name" {
   description = "The API subnet name."
 }
 
+variable "oke_vcn1_workers_ad1_availability_domain" {
+  type        = string
+  description = "The workers availability domain."
+}
+
 variable "oke_vcn1_workers_ad1_subnet_cidr" {
   type        = string
   description = "The Workers subnet CIDR block. It must be within the VCN CIDR blocks."
@@ -63,6 +68,11 @@ variable "oke_vcn1_workers_ad1_subnet_name" {
   description = "The Workers subnet name."
 }
 
+variable "oke_vcn1_workers_ad2_availability_domain" {
+  type        = string
+  description = "The workers availability domain."
+}
+
 variable "oke_vcn1_workers_ad2_subnet_cidr" {
   type        = string
   description = "The Workers subnet CIDR block. It must be within the VCN CIDR blocks."
@@ -71,6 +81,11 @@ variable "oke_vcn1_workers_ad2_subnet_cidr" {
 variable "oke_vcn1_workers_ad2_subnet_name" {
   type        = string
   description = "The Workers subnet name."
+}
+
+variable "oke_vcn1_workers_ad3_availability_domain" {
+  type        = string
+  description = "The workers availability domain."
 }
 
 variable "oke_vcn1_workers_ad3_subnet_cidr" {

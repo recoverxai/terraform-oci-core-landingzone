@@ -31,8 +31,9 @@ locals {
           "OKE-VCN-1-WORKERS-AD1-SUBNET" = {
             cidr_block                = var.oke_vcn1_workers_ad1_subnet_cidr
             dhcp_options_key          = "default_dhcp_options"
+            availability_domain       = var.oke_vcn1_workers_ad1_availability_domain
             display_name              = var.oke_vcn1_workers_ad1_subnet_name
-            dns_label                 = substr(replace(var.oke_vcn1_workers_ad1_subnet_name, "/[^\\w]/", ""), 0, 14)
+            dns_label                 = "${substr(replace(var.oke_vcn1_workers_ad1_subnet_name, "/[^\\w]/", ""), 0, 11)}ad1"
             ipv6cidr_blocks           = []
             prohibit_internet_ingress = true
             route_table_key           = "OKE-VCN-1-WORKERS-AD1-SUBNET-ROUTE-TABLE"
@@ -43,24 +44,28 @@ locals {
           "OKE-VCN-1-WORKERS-AD2-SUBNET" = {
             cidr_block                = var.oke_vcn1_workers_ad2_subnet_cidr
             dhcp_options_key          = "default_dhcp_options"
+            availability_domain       = var.oke_vcn1_workers_ad2_availability_domain
             display_name              = var.oke_vcn1_workers_ad2_subnet_name
-            dns_label                 = substr(replace(var.oke_vcn1_workers_ad2_subnet_name, "/[^\\w]/", ""), 0, 14)
+            dns_label                 = "${substr(replace(var.oke_vcn1_workers_ad2_subnet_name, "/[^\\w]/", ""), 0, 11)}ad2"
             ipv6cidr_blocks           = []
             prohibit_internet_ingress = true
             route_table_key           = "OKE-VCN-1-WORKERS-AD2-SUBNET-ROUTE-TABLE"
             security_list_keys        = ["OKE-VCN-1-WORKERS-AD2-SUBNET-SL"]
+            # availability_domain       = "ad2"
           }
         },
         {
           "OKE-VCN-1-WORKERS-AD3-SUBNET" = {
             cidr_block                = var.oke_vcn1_workers_ad3_subnet_cidr
             dhcp_options_key          = "default_dhcp_options"
+            availability_domain       = var.oke_vcn1_workers_ad3_availability_domain
             display_name              = var.oke_vcn1_workers_ad3_subnet_name
-            dns_label                 = substr(replace(var.oke_vcn1_workers_ad3_subnet_name, "/[^\\w]/", ""), 0, 14)
+            dns_label                 = "${substr(replace(var.oke_vcn1_workers_ad3_subnet_name, "/[^\\w]/", ""), 0, 11)}ad3"
             ipv6cidr_blocks           = []
             prohibit_internet_ingress = true
             route_table_key           = "OKE-VCN-1-WORKERS-AD3-SUBNET-ROUTE-TABLE"
             security_list_keys        = ["OKE-VCN-1-WORKERS-AD3-SUBNET-SL"]
+            # availability_domain       = "ad3"
           }
         },
         {
