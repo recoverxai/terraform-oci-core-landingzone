@@ -51,7 +51,6 @@ locals {
             prohibit_internet_ingress = true
             route_table_key           = "OKE-VCN-1-WORKERS-AD2-SUBNET-ROUTE-TABLE"
             security_list_keys        = ["OKE-VCN-1-WORKERS-AD2-SUBNET-SL"]
-            # availability_domain       = "ad2"
           }
         },
         {
@@ -65,7 +64,6 @@ locals {
             prohibit_internet_ingress = true
             route_table_key           = "OKE-VCN-1-WORKERS-AD3-SUBNET-ROUTE-TABLE"
             security_list_keys        = ["OKE-VCN-1-WORKERS-AD3-SUBNET-SL"]
-            # availability_domain       = "ad3"
           }
         },
         {
