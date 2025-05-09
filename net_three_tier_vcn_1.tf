@@ -17,7 +17,7 @@ locals {
 
   tt_vcn_1 = local.add_tt_vcn1 == true ? {
     "TT-VCN-1" = {
-      display_name                    = coalesce(var.tt_vcn1_name, "${var.service_label}-three-tier-vcn-1")
+      display_name                     = coalesce(var.tt_vcn1_name, "${var.service_label}-three-tier-vcn-1")
       is_ipv6enabled                   = false
       is_oracle_gua_allocation_enabled = false
       cidr_blocks                      = var.tt_vcn1_cidrs,

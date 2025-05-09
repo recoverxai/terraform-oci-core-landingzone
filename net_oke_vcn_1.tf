@@ -614,15 +614,15 @@ locals {
               } : {}
             )
             ingress_rules = merge({
-                for cidr in var.oke_vcn1_api_subnet_allowed_cidrs : "INGRESS-FROM-${cidr}-RULE" => {
-                  description  = "Ingress from ${cidr} on port 6443."
-                  stateless    = false
-                  protocol     = "TCP"
-                  src          = cidr
-                  src_type     = "CIDR_BLOCK"
-                  dst_port_min = 6443
-                  dst_port_max = 6443
-                }
+              for cidr in var.oke_vcn1_api_subnet_allowed_cidrs : "INGRESS-FROM-${cidr}-RULE" => {
+                description  = "Ingress from ${cidr} on port 6443."
+                stateless    = false
+                protocol     = "TCP"
+                src          = cidr
+                src_type     = "CIDR_BLOCK"
+                dst_port_min = 6443
+                dst_port_max = 6443
+              }
               },
               {
                 "INGRESS-FROM-WORKERS-AD1-6443-API-RULE" = {
@@ -808,7 +808,7 @@ locals {
                   dst_port_min = 6443
                   dst_port_max = 6443
                 }
-              } : {})
+            } : {})
           }
           "OKE-VCN-1-WORKERS-AD1-NSG" = {
             display_name = "workers-ad1-nsg"
