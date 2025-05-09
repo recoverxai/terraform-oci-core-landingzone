@@ -5,9 +5,19 @@ locals {
 
   add_tt_vcn1 = var.define_net == true && var.add_tt_vcn1 == true
 
+  tt_vcn1_cross_vcn_routes = {
+    for cidr in var.tt_vcn1_routable_cidrs :
+    "TO-${replace(cidr, "/", "-")}" => {
+      network_entity_key = "HUB-DRG"
+      description        = "To ${cidr} via DRG"
+      destination        = cidr
+      destination_type   = "CIDR_BLOCK"
+    }
+  }
+
   tt_vcn_1 = local.add_tt_vcn1 == true ? {
     "TT-VCN-1" = {
-      display_name                     = coalesce(var.tt_vcn1_name, "${var.service_label}-three-tier-vcn-1")
+      display_name                    = coalesce(var.tt_vcn1_name, "${var.service_label}-three-tier-vcn-1")
       is_ipv6enabled                   = false
       is_oracle_gua_allocation_enabled = false
       cidr_blocks                      = var.tt_vcn1_cidrs,
@@ -106,7 +116,7 @@ locals {
           "TT-VCN-1-WEB-SUBNET-ROUTE-TABLE" = {
             display_name = "web-subnet-route-table"
             route_rules = merge(
-              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? {
+              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? merge(local.tt_vcn1_cross_vcn_routes, {
                 "INTERNET-RULE" = {
                   network_entity_key = var.tt_vcn1_web_subnet_is_private == false ? "TT-VCN-1-INTERNET-GATEWAY" : "TT-VCN-1-NAT-GATEWAY"
                   description        = "To Internet."
@@ -119,7 +129,7 @@ locals {
                   destination        = "objectstorage"
                   destination_type   = "SERVICE_CIDR_BLOCK"
                 }
-                } : {
+                }) : {
                 "HUB-DRG-RULE" = {
                   network_entity_key = "HUB-DRG"
                   description        = "Route to HUB DRG"
@@ -134,7 +144,7 @@ locals {
           "TT-VCN-1-APP-SUBNET-ROUTE-TABLE" = {
             display_name = "app-subnet-route-table"
             route_rules = merge(
-              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? {
+              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? merge(local.tt_vcn1_cross_vcn_routes, {
                 "INTERNET-RULE" = {
                   network_entity_key = "TT-VCN-1-NAT-GATEWAY"
                   description        = "To Internet."
@@ -147,7 +157,7 @@ locals {
                   destination        = "all-services"
                   destination_type   = "SERVICE_CIDR_BLOCK"
                 }
-                } : {
+                }) : {
                 "HUB-DRG-RULE" = {
                   network_entity_key = "HUB-DRG"
                   description        = "Route to HUB DRG"
@@ -162,7 +172,7 @@ locals {
           "TT-VCN-1-DB-SUBNET-ROUTE-TABLE" = {
             display_name = "db-subnet-route-table"
             route_rules = merge(
-              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? {
+              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? merge(local.tt_vcn1_cross_vcn_routes, {
                 "INTERNET-RULE" = {
                   network_entity_key = "TT-VCN-1-NAT-GATEWAY"
                   description        = "To Internet."
@@ -175,7 +185,7 @@ locals {
                   destination        = "all-services"
                   destination_type   = "SERVICE_CIDR_BLOCK"
                 }
-                } : {
+                }) : {
                 "HUB-DRG-RULE" = {
                   network_entity_key = "HUB-DRG"
                   description        = "Route to HUB DRG"
@@ -190,7 +200,7 @@ locals {
           "TT-VCN-1-BASTION-SUBNET-ROUTE-TABLE" = {
             display_name = "bastion-subnet-route-table"
             route_rules = merge(
-              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? {
+              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? merge(local.tt_vcn1_cross_vcn_routes, {
                 "INTERNET-RULE" = {
                   network_entity_key = var.tt_vcn1_bastion_is_access_via_public_endpoint == false ? "TT-VCN-1-NAT-GATEWAY" : "TT-VCN-1-INTERNET-GATEWAY"
                   description        = "To Internet."
@@ -203,7 +213,7 @@ locals {
                   destination        = var.tt_vcn1_bastion_is_access_via_public_endpoint == false ? "all-services" : "objectstorage"
                   destination_type   = "SERVICE_CIDR_BLOCK"
                 }
-                } : {
+                }) : {
                 "HUB-DRG-RULE" = {
                   network_entity_key = "HUB-DRG"
                   description        = "Route to HUB DRG"
@@ -458,6 +468,17 @@ locals {
                   dst_type     = "SERVICE_CIDR_BLOCK"
                   dst_port_min = 443
                   dst_port_max = 443
+                }
+              },
+              {
+                "EGRESS-TO-ALL" = {
+                  description  = "Egress to All."
+                  stateless    = false
+                  protocol     = "TCP"
+                  dst          = "0.0.0.0/0"
+                  dst_type     = "CIDR_BLOCK"
+                  dst_port_min = null
+                  dst_port_max = null
                 }
               },
               { for cidr in var.tt_vcn1_bastion_subnet_allowed_cidrs : "EGRESS-TO-${cidr}-RULE" => {

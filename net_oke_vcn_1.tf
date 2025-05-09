@@ -5,6 +5,16 @@ locals {
 
   add_oke_vcn1 = var.define_net == true && var.add_oke_vcn1 == true
 
+  oke_vcn1_cross_vcn_routes = {
+    for cidr in var.oke_vcn1_routable_cidrs :
+    "TO-${replace(cidr, "/", "-")}" => {
+      network_entity_key = "HUB-DRG"
+      description        = "To ${cidr} via DRG"
+      destination        = cidr
+      destination_type   = "CIDR_BLOCK"
+    }
+  }
+
   oke_vcn_1 = local.add_oke_vcn1 == true ? {
     "OKE-VCN-1" = {
       display_name                     = coalesce(var.oke_vcn1_name, "${var.service_label}-oke-vcn-1")
@@ -286,14 +296,14 @@ locals {
           "OKE-VCN-1-API-SUBNET-ROUTE-TABLE" = {
             display_name = "api-subnet-route-table"
             route_rules = merge(
-              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? {
+              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? merge(local.oke_vcn1_cross_vcn_routes, {
                 "SGW-RULE" = {
                   network_entity_key = "OKE-VCN-1-SERVICE-GATEWAY"
                   description        = "Route for sgw"
                   destination        = "all-services"
                   destination_type   = "SERVICE_CIDR_BLOCK"
                 }
-                } : {
+                }) : {
                 "HUB-DRG-RULE" = {
                   network_entity_key = "HUB-DRG"
                   description        = "Route to HUB DRG"
@@ -316,7 +326,7 @@ locals {
           "OKE-VCN-1-WORKERS-AD1-SUBNET-ROUTE-TABLE" = {
             display_name = "workers-ad1-subnet-route-table"
             route_rules = merge(
-              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? {
+              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? merge(local.oke_vcn1_cross_vcn_routes, {
                 "SGW-RULE" = {
                   network_entity_key = "OKE-VCN-1-SERVICE-GATEWAY"
                   description        = "Route for sgw"
@@ -329,7 +339,7 @@ locals {
                   destination        = "0.0.0.0/0"
                   destination_type   = "CIDR_BLOCK"
                 }
-                } : {
+                }) : {
                 "HUB-DRG-RULE" = {
                   network_entity_key = "HUB-DRG"
                   description        = "Route to HUB DRG"
@@ -344,7 +354,7 @@ locals {
           "OKE-VCN-1-WORKERS-AD2-SUBNET-ROUTE-TABLE" = {
             display_name = "workers-ad2-subnet-route-table"
             route_rules = merge(
-              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? {
+              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? merge(local.oke_vcn1_cross_vcn_routes, {
                 "SGW-RULE" = {
                   network_entity_key = "OKE-VCN-1-SERVICE-GATEWAY"
                   description        = "Route for sgw"
@@ -357,7 +367,7 @@ locals {
                   destination        = "0.0.0.0/0"
                   destination_type   = "CIDR_BLOCK"
                 }
-                } : {
+                }) : {
                 "HUB-DRG-RULE" = {
                   network_entity_key = "HUB-DRG"
                   description        = "Route to HUB DRG"
@@ -372,7 +382,7 @@ locals {
           "OKE-VCN-1-WORKERS-AD3-SUBNET-ROUTE-TABLE" = {
             display_name = "workers-ad3-subnet-route-table"
             route_rules = merge(
-              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? {
+              (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? merge(local.oke_vcn1_cross_vcn_routes, {
                 "SGW-RULE" = {
                   network_entity_key = "OKE-VCN-1-SERVICE-GATEWAY"
                   description        = "Route for sgw"
@@ -385,7 +395,7 @@ locals {
                   destination        = "0.0.0.0/0"
                   destination_type   = "CIDR_BLOCK"
                 }
-                } : {
+                }) : {
                 "HUB-DRG-RULE" = {
                   network_entity_key = "HUB-DRG"
                   description        = "Route to HUB DRG"
@@ -399,14 +409,14 @@ locals {
         {
           "OKE-VCN-1-SERVICES-SUBNET-ROUTE-TABLE" = {
             display_name = "services-subnet-route-table"
-            route_rules = (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? {
+            route_rules = (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? merge(local.oke_vcn1_cross_vcn_routes, {
               "IGW-RULE" = {
                 network_entity_key = "OKE-VCN-1-INTERNET-GATEWAY"
                 description        = "Route for igw"
                 destination        = "0.0.0.0/0"
                 destination_type   = "CIDR_BLOCK"
               }
-              } : {
+              }) : {
               "HUB-DRG-RULE" = {
                 network_entity_key = "HUB-DRG"
                 description        = "Route to HUB DRG"
@@ -419,7 +429,7 @@ locals {
         var.add_oke_vcn1_mgmt_subnet ? {
           "OKE-VCN-1-MGMT-SUBNET-ROUTE-TABLE" = {
             display_name = "mgmt-subnet-route-table"
-            route_rules = (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? {
+            route_rules = (local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? merge(local.oke_vcn1_cross_vcn_routes, {
               "SGW-RULE" = {
                 network_entity_key = "OKE-VCN-1-SERVICE-GATEWAY"
                 description        = "Route for sgw"
@@ -432,7 +442,7 @@ locals {
                 destination        = "0.0.0.0/0"
                 destination_type   = "CIDR_BLOCK"
               }
-              } : {
+              }) : {
               "HUB-DRG-RULE" = {
                 network_entity_key = "HUB-DRG"
                 description        = "Route to HUB DRG"
@@ -445,7 +455,7 @@ locals {
         upper(var.oke_vcn1_cni_type) == "NATIVE" ? {
           "OKE-VCN-1-PODS-SUBNET-ROUTE-TABLE" = {
             display_name = "pods-subnet-route-table"
-            route_rules = merge((local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? {
+            route_rules = merge((local.chosen_hub_option != 3 && local.chosen_hub_option != 4) ? merge(local.oke_vcn1_cross_vcn_routes, {
               "SGW-RULE" = {
                 network_entity_key = "OKE-VCN-1-SERVICE-GATEWAY"
                 description        = "Route for sgw"
@@ -458,7 +468,7 @@ locals {
                 destination        = "0.0.0.0/0"
                 destination_type   = "CIDR_BLOCK"
               }
-              } : {
+              }) : {
               "HUB-DRG-RULE" = {
                 network_entity_key = "HUB-DRG"
                 description        = "Route to HUB DRG"
@@ -603,7 +613,17 @@ locals {
                 }
               } : {}
             )
-            ingress_rules = merge(
+            ingress_rules = merge({
+                for cidr in var.oke_vcn1_api_subnet_allowed_cidrs : "INGRESS-FROM-${cidr}-RULE" => {
+                  description  = "Ingress from ${cidr} on port 6443."
+                  stateless    = false
+                  protocol     = "TCP"
+                  src          = cidr
+                  src_type     = "CIDR_BLOCK"
+                  dst_port_min = 6443
+                  dst_port_max = 6443
+                }
+              },
               {
                 "INGRESS-FROM-WORKERS-AD1-6443-API-RULE" = {
                   description  = "Allows inbound TCP from worker nodes."
@@ -788,8 +808,7 @@ locals {
                   dst_port_min = 6443
                   dst_port_max = 6443
                 }
-              } : {}
-            )
+              } : {})
           }
           "OKE-VCN-1-WORKERS-AD1-NSG" = {
             display_name = "workers-ad1-nsg"

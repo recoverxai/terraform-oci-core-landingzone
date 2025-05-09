@@ -29,6 +29,11 @@ variable "tt_vcn1_routable_vcns" {
   default     = []
   description = "The VCN labels that this VCN can send traffic to. Leave unassigned for sending traffic to all VCNs. Only applicable for Hub/Spoke topology where a DRG is deployed as the hub. Valid values: TT-VCN-2, TT-VCN-3, EXA-VCN-1, EXA-VCN-2, EXA-VCN3, OKE-VCN-1, OKE-VCN-2, OKE-VCN-3."
 }
+variable "tt_vcn1_routable_cidrs" {
+  type        = list(string)
+  default     = []
+  description = "List of routable cidrs"
+}
 variable "customize_tt_vcn1_subnets" {
   type        = bool
   default     = false

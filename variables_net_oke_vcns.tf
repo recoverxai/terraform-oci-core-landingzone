@@ -41,6 +41,12 @@ variable "oke_vcn1_routable_vcns" {
   description = "The VCN labels that this VCN can send traffic to. Only applicable for Hub/Spoke topology where a DRG is deployed as the hub. Valid values: TT-VCN-1, TT-VCN-2, TT-VCN-3, EXA-VCN-1, EXA-VCN-2, EXA-VCN3, OKE-VCN-2, OKE-VCN-3."
 }
 
+variable "oke_vcn1_routable_cidrs" {
+  type        = list(string)
+  default     = []
+  description = "List of routable cidrs"
+}
+
 variable "oke_vcn1_api_subnet_cidr" {
   type        = string
   default     = null
@@ -51,6 +57,12 @@ variable "oke_vcn1_api_subnet_name" {
   type        = string
   default     = null
   description = "The API subnet name."
+}
+
+variable "oke_vcn1_api_subnet_allowed_cidrs" {
+  type        = list(string)
+  default     = []
+  description = "The CIDR blocks that are allowed to access the API subnet."
 }
 
 variable "oke_vcn1_workers_ad1_availability_domain" {
