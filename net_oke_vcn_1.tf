@@ -1902,11 +1902,11 @@ locals {
     (local.add_oke_vcn1 == true && var.oke_vcn1_attach_to_drg == true && var.add_tt_vcn1 == true && var.tt_vcn1_attach_to_drg == true) &&
     (local.hub_with_vcn == true || (local.hub_with_drg_only == true && (length(var.oke_vcn1_routable_vcns) == 0 || contains(var.oke_vcn1_routable_vcns, "TT-VCN-1")))) ? {
       "EGRESS-TO-TT-VCN-1-DB-SUBNET-RULE" = {
-        description  = "Egress to ${coalesce(var.tt_vcn1_db_subnet_name, "${var.service_label}-tt-vcn-1-db-subnet")}."
-        stateless    = false
-        protocol     = "TCP"
-        dst          = coalesce(var.tt_vcn1_db_subnet_cidr, cidrsubnet(var.tt_vcn1_cidrs[0], 4, 2))
-        dst_type     = "CIDR_BLOCK"
+        description = "Egress to ${coalesce(var.tt_vcn1_db_subnet_name, "${var.service_label}-tt-vcn-1-db-subnet")}."
+        stateless   = false
+        protocol    = "TCP"
+        dst         = coalesce(var.tt_vcn1_db_subnet_cidr, cidrsubnet(var.tt_vcn1_cidrs[0], 4, 2))
+        dst_type    = "CIDR_BLOCK"
         # dst_port_min = 1521
         # dst_port_max = 1522
       }
