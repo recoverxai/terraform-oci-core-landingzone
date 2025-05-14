@@ -1907,8 +1907,8 @@ locals {
         protocol     = "TCP"
         dst          = coalesce(var.tt_vcn1_db_subnet_cidr, cidrsubnet(var.tt_vcn1_cidrs[0], 4, 2))
         dst_type     = "CIDR_BLOCK"
-        dst_port_min = 1521
-        dst_port_max = 1522
+        # dst_port_min = 1521
+        # dst_port_max = 1522
       }
     } : {},
     (local.add_oke_vcn1 == true && var.oke_vcn1_attach_to_drg == true && var.add_tt_vcn2 == true && var.tt_vcn2_attach_to_drg == true) &&
