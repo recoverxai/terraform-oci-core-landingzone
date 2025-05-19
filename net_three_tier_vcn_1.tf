@@ -278,7 +278,8 @@ locals {
                   dst_port_max = 443
                 }
               },
-              local.vcn_1_to_hub_indoor_subnet_cross_vcn_egress
+              local.vcn_1_to_hub_indoor_subnet_cross_vcn_egress,
+              local.vcn_1_to_web_subnet_cross_vcn_egress,
               #local.vcn_1_to_app_subnet_cross_vcn_egress
             )
           }
@@ -560,7 +561,37 @@ locals {
         dst_port_min = 443
         dst_port_max = 443
       }
-    } : {}
+    } : {},
+    (local.add_tt_vcn1 == true && var.tt_vcn1_attach_to_drg == true && var.add_oke_vcn1 == true && var.oke_vcn1_attach_to_drg == true) &&
+    (local.hub_with_vcn == true || (local.hub_with_drg_only == true && (length(var.oke_vcn1_routable_vcns) == 0 || contains(var.oke_vcn1_routable_vcns, "TT-VCN-1")))) ? merge(
+      {
+        "EGRESS-TO-OKE-VCN-1-WORKERS-AD1-SUBNET-RULE" = {
+          description  = "Egress to ${var.oke_vcn1_workers_ad1_subnet_name}."
+          stateless    = false
+          protocol     = "TCP"
+          dst          = coalesce(var.oke_vcn1_workers_ad1_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
+          dst_type     = "CIDR_BLOCK"
+        }
+      },
+      {
+        "EGRESS-TO-OKE-VCN-1-WORKERS-AD2-SUBNET-RULE" = {
+          description  = "Egress to ${var.oke_vcn1_workers_ad2_subnet_name}."
+          stateless    = false
+          protocol     = "TCP"
+          dst          = coalesce(var.oke_vcn1_workers_ad2_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
+          dst_type     = "CIDR_BLOCK"
+        }
+      },
+      {
+        "EGRESS-TO-OKE-VCN-1-WORKERS-AD3-SUBNET-RULE" = {
+          description  = "Egress to ${var.oke_vcn1_workers_ad3_subnet_name}."
+          stateless    = false
+          protocol     = "TCP"
+          dst          = coalesce(var.oke_vcn1_workers_ad3_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
+          dst_type     = "CIDR_BLOCK"
+        }
+      },
+    ) : {}
   )
   ## Egress to VCN-2 and VCN-3 db subnet
   vcn_1_to_db_subnet_cross_vcn_egress = merge(
@@ -681,7 +712,7 @@ locals {
   )
 
   ## Ingress rules into TT-VCN-1 web subnet
-  vcn_1_to_web_subnet_cross_vcn_ingress = merge(
+    vcn_1_to_web_subnet_cross_vcn_ingress = merge(
     ## Ingress from TT-VCN-2
     (local.add_tt_vcn1 == true && var.tt_vcn1_attach_to_drg == true && var.add_tt_vcn2 == true && var.tt_vcn2_attach_to_drg == true) &&
     (local.hub_with_vcn == true || (local.hub_with_drg_only == true && (length(var.tt_vcn2_routable_vcns) == 0 || contains(var.tt_vcn2_routable_vcns, "TT-VCN-1")))) ? {
@@ -712,11 +743,33 @@ locals {
     (local.add_tt_vcn1 == true && var.tt_vcn1_attach_to_drg == true && var.add_oke_vcn1 == true && var.oke_vcn1_attach_to_drg == true) &&
     (local.hub_with_vcn == true || (local.hub_with_drg_only == true && (length(var.oke_vcn1_routable_vcns) == 0 || contains(var.oke_vcn1_routable_vcns, "TT-VCN-1")))) ? merge(
       {
-        "INGRESS-FROM-OKE-VCN-1-WORKERS-SUBNET-RULE" = {
-          description  = "Ingress from ${coalesce(var.oke_vcn1_workers_ad1_subnet_name, "${var.service_label}-oke-vcn-1-workers-subnet")}."
+        "INGRESS-FROM-OKE-VCN-1-WORKERS-AD1-SUBNET-RULE" = {
+          description  = "Ingress from ${var.oke_vcn1_workers_ad1_subnet_name}."
           stateless    = false
           protocol     = "TCP"
-          src          = coalesce(var.oke_vcn1_workers_ad1_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
+          src          = var.oke_vcn1_workers_ad1_subnet_cidr
+          src_type     = "CIDR_BLOCK"
+          dst_port_min = 443
+          dst_port_max = 443
+        }
+      },
+      {
+        "INGRESS-FROM-OKE-VCN-1-WORKERS-AD2-SUBNET-RULE" = {
+          description  = "Ingress from ${var.oke_vcn1_workers_ad2_subnet_name}."
+          stateless    = false
+          protocol     = "TCP"
+          src          = var.oke_vcn1_workers_ad2_subnet_cidr
+          src_type     = "CIDR_BLOCK"
+          dst_port_min = 443
+          dst_port_max = 443
+        }
+      },
+      {
+        "INGRESS-FROM-OKE-VCN-1-WORKERS-AD3-SUBNET-RULE" = {
+          description  = "Ingress from ${var.oke_vcn1_workers_ad3_subnet_name}."
+          stateless    = false
+          protocol     = "TCP"
+          src          = var.oke_vcn1_workers_ad3_subnet_cidr
           src_type     = "CIDR_BLOCK"
           dst_port_min = 443
           dst_port_max = 443
