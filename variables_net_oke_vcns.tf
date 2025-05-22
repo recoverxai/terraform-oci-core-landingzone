@@ -151,6 +151,7 @@ variable "oke_vcn1_pods_subnet_cidr" {
   default     = null
   description = "The Pods subnet CIDR block. It must be within the VCN CIDR blocks."
 }
+
 # ------------------------------------------------------
 # ----- Networking - OKE VCN 2
 #-------------------------------------------------------

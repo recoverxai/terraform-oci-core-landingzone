@@ -1484,7 +1484,16 @@ locals {
               }
               },
               local.oke_vcn_1_to_workers_subnet_cross_vcn_egress,
-              local.oke_vcn_1_to_pods_subnet_cross_vcn_egress
+              local.oke_vcn_1_to_pods_subnet_cross_vcn_egress,
+              {
+                for cidr in var.oke_vcn1_routable_cidrs : "EGRESS-TO-${replace(cidr, "/", "-")}-TCP-RULE" => {
+                  description = "Allows outbound to ${replace(cidr, "/", "-")} on all TCP."
+                  stateless   = false
+                  protocol    = "TCP"
+                  dst         = cidr
+                  dst_type    = "CIDR_BLOCK"
+                }
+              },
             )
             ingress_rules = merge({
               "INGRESS-FROM-ANYWHERE-TCP-RULE" = {
@@ -1497,7 +1506,16 @@ locals {
                 dst_port_max = 443
               }
               },
-              local.oke_vcn_1_to_services_subnet_cross_vcn_ingress
+              local.oke_vcn_1_to_services_subnet_cross_vcn_ingress,
+              {
+                for cidr in var.oke_vcn1_routable_cidrs : "INGRESS-FROM-${replace(cidr, "/", "-")}-TCP-RULE" => {
+                  description = "Allows inbound from ${replace(cidr, "/", "-")} on all TCP."
+                  stateless   = false
+                  protocol    = "TCP"
+                  src         = cidr
+                  src_type    = "CIDR_BLOCK"
+                }
+              },
             )
           }
         },
@@ -1631,7 +1649,16 @@ locals {
               local.oke_vcn_1_to_client_subnet_cross_vcn_egress,
               local.oke_vcn_1_to_web_subnet_cross_vcn_egress,
               local.oke_vcn_1_to_app_subnet_cross_vcn_egress,
-              local.oke_vcn_1_to_db_subnet_cross_vcn_egress
+              local.oke_vcn_1_to_db_subnet_cross_vcn_egress,
+              {
+                for cidr in var.oke_vcn1_routable_cidrs : "EGRESS-TO-${replace(cidr, "/", "-")}-TCP-RULE" => {
+                  description = "Allows outbound to ${replace(cidr, "/", "-")} on all TCP."
+                  stateless   = false
+                  protocol    = "TCP"
+                  dst         = cidr
+                  dst_type    = "CIDR_BLOCK"
+                }
+              },
             )
             ingress_rules = merge({
               "INGRESS-FROM-WORKERS-AD1-RULE" = {
@@ -1670,7 +1697,16 @@ locals {
                 src_type    = "NETWORK_SECURITY_GROUP"
               }
               },
-              local.oke_vcn_1_to_pods_subnet_cross_vcn_ingress
+              local.oke_vcn_1_to_pods_subnet_cross_vcn_ingress,
+              {
+                for cidr in var.oke_vcn1_routable_cidrs : "INGRESS-FROM-${replace(cidr, "/", "-")}-TCP-RULE" => {
+                  description = "Allows inbound from ${replace(cidr, "/", "-")} on all TCP."
+                  stateless   = false
+                  protocol    = "TCP"
+                  src         = cidr
+                  src_type    = "CIDR_BLOCK"
+                }
+              },
             )
           }
         } : {}

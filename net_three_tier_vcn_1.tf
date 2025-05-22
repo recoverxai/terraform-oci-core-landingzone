@@ -566,29 +566,29 @@ locals {
     (local.hub_with_vcn == true || (local.hub_with_drg_only == true && (length(var.oke_vcn1_routable_vcns) == 0 || contains(var.oke_vcn1_routable_vcns, "TT-VCN-1")))) ? merge(
       {
         "EGRESS-TO-OKE-VCN-1-WORKERS-AD1-SUBNET-RULE" = {
-          description  = "Egress to ${var.oke_vcn1_workers_ad1_subnet_name}."
-          stateless    = false
-          protocol     = "TCP"
-          dst          = coalesce(var.oke_vcn1_workers_ad1_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
-          dst_type     = "CIDR_BLOCK"
+          description = "Egress to ${var.oke_vcn1_workers_ad1_subnet_name}."
+          stateless   = false
+          protocol    = "TCP"
+          dst         = coalesce(var.oke_vcn1_workers_ad1_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
+          dst_type    = "CIDR_BLOCK"
         }
       },
       {
         "EGRESS-TO-OKE-VCN-1-WORKERS-AD2-SUBNET-RULE" = {
-          description  = "Egress to ${var.oke_vcn1_workers_ad2_subnet_name}."
-          stateless    = false
-          protocol     = "TCP"
-          dst          = coalesce(var.oke_vcn1_workers_ad2_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
-          dst_type     = "CIDR_BLOCK"
+          description = "Egress to ${var.oke_vcn1_workers_ad2_subnet_name}."
+          stateless   = false
+          protocol    = "TCP"
+          dst         = coalesce(var.oke_vcn1_workers_ad2_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
+          dst_type    = "CIDR_BLOCK"
         }
       },
       {
         "EGRESS-TO-OKE-VCN-1-WORKERS-AD3-SUBNET-RULE" = {
-          description  = "Egress to ${var.oke_vcn1_workers_ad3_subnet_name}."
-          stateless    = false
-          protocol     = "TCP"
-          dst          = coalesce(var.oke_vcn1_workers_ad3_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
-          dst_type     = "CIDR_BLOCK"
+          description = "Egress to ${var.oke_vcn1_workers_ad3_subnet_name}."
+          stateless   = false
+          protocol    = "TCP"
+          dst         = coalesce(var.oke_vcn1_workers_ad3_subnet_cidr, cidrsubnet(var.oke_vcn1_cidrs[0], 8, 1))
+          dst_type    = "CIDR_BLOCK"
         }
       },
     ) : {}
@@ -712,7 +712,7 @@ locals {
   )
 
   ## Ingress rules into TT-VCN-1 web subnet
-    vcn_1_to_web_subnet_cross_vcn_ingress = merge(
+  vcn_1_to_web_subnet_cross_vcn_ingress = merge(
     ## Ingress from TT-VCN-2
     (local.add_tt_vcn1 == true && var.tt_vcn1_attach_to_drg == true && var.add_tt_vcn2 == true && var.tt_vcn2_attach_to_drg == true) &&
     (local.hub_with_vcn == true || (local.hub_with_drg_only == true && (length(var.tt_vcn2_routable_vcns) == 0 || contains(var.tt_vcn2_routable_vcns, "TT-VCN-1")))) ? {
