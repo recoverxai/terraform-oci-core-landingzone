@@ -904,52 +904,63 @@ locals {
               local.oke_vcn_1_to_db_subnet_cross_vcn_egress
             )
             ingress_rules = merge({
-              "INGRESS-FROM-WORKERS-AD1-ALL-WORKERS-AD1-RULE" = {
-                description = "Allows all inbound traffic from worker nodes."
-                stateless   = false
-                protocol    = "ALL"
-                src         = "OKE-VCN-1-WORKERS-AD1-NSG"
-                src_type    = "NETWORK_SECURITY_GROUP"
-              }
-              "INGRESS-FROM-WORKERS-AD2-ALL-WORKERS-AD1-RULE" = {
-                description = "Allows all inbound traffic from worker nodes."
-                stateless   = false
-                protocol    = "ALL"
-                src         = "OKE-VCN-1-WORKERS-AD2-NSG"
-                src_type    = "NETWORK_SECURITY_GROUP"
-              }
-              "INGRESS-FROM-WORKERS-AD3-ALL-WORKERS-AD1-RULE" = {
-                description = "Allows all inbound traffic from worker nodes."
-                stateless   = false
-                protocol    = "ALL"
-                src         = "OKE-VCN-1-WORKERS-AD3-NSG"
-                src_type    = "NETWORK_SECURITY_GROUP"
-              }
-              "INGRESS-FROM-API-WORKERS-AD1-RULE" = {
-                description = "Allows all inbound traffic from OKE control plane for webhooks served by workers."
-                stateless   = false
-                protocol    = "ALL"
-                src         = "OKE-VCN-1-API-NSG"
-                src_type    = "NETWORK_SECURITY_GROUP"
-              }
-              "INGRESS-FROM-LB-10256-WORKERS-AD1-RULE" = {
-                description  = "Allows inbound TCP for health check from public load balancers."
+              for cidr in var.oke_vcn1_api_subnet_allowed_cidrs : "INGRESS-FROM-${cidr}-AD1-RULE" => {
+                description  = "Ingress from ${cidr} on port 6443."
                 stateless    = false
                 protocol     = "TCP"
-                src          = "OKE-VCN-1-SERVICES-NSG"
-                src_type     = "NETWORK_SECURITY_GROUP"
-                dst_port_min = 10256
-                dst_port_max = 10256
+                src          = cidr
+                src_type     = "CIDR_BLOCK"
+                dst_port_min = 22
+                dst_port_max = 22
               }
-              "INGRESS-FROM-LB-TCP-WORKERS-AD1-RULE" = {
-                description  = "Allows inbound TCP from public load balancers."
-                stateless    = false
-                protocol     = "TCP"
-                src          = "OKE-VCN-1-SERVICES-NSG"
-                src_type     = "NETWORK_SECURITY_GROUP"
-                dst_port_min = 30000
-                dst_port_max = 32767
-              }
+              },
+              {
+                "INGRESS-FROM-WORKERS-AD1-ALL-WORKERS-AD1-RULE" = {
+                  description = "Allows all inbound traffic from worker nodes."
+                  stateless   = false
+                  protocol    = "ALL"
+                  src         = "OKE-VCN-1-WORKERS-AD1-NSG"
+                  src_type    = "NETWORK_SECURITY_GROUP"
+                }
+                "INGRESS-FROM-WORKERS-AD2-ALL-WORKERS-AD1-RULE" = {
+                  description = "Allows all inbound traffic from worker nodes."
+                  stateless   = false
+                  protocol    = "ALL"
+                  src         = "OKE-VCN-1-WORKERS-AD2-NSG"
+                  src_type    = "NETWORK_SECURITY_GROUP"
+                }
+                "INGRESS-FROM-WORKERS-AD3-ALL-WORKERS-AD1-RULE" = {
+                  description = "Allows all inbound traffic from worker nodes."
+                  stateless   = false
+                  protocol    = "ALL"
+                  src         = "OKE-VCN-1-WORKERS-AD3-NSG"
+                  src_type    = "NETWORK_SECURITY_GROUP"
+                }
+                "INGRESS-FROM-API-WORKERS-AD1-RULE" = {
+                  description = "Allows all inbound traffic from OKE control plane for webhooks served by workers."
+                  stateless   = false
+                  protocol    = "ALL"
+                  src         = "OKE-VCN-1-API-NSG"
+                  src_type    = "NETWORK_SECURITY_GROUP"
+                }
+                "INGRESS-FROM-LB-10256-WORKERS-AD1-RULE" = {
+                  description  = "Allows inbound TCP for health check from public load balancers."
+                  stateless    = false
+                  protocol     = "TCP"
+                  src          = "OKE-VCN-1-SERVICES-NSG"
+                  src_type     = "NETWORK_SECURITY_GROUP"
+                  dst_port_min = 10256
+                  dst_port_max = 10256
+                }
+                "INGRESS-FROM-LB-TCP-WORKERS-AD1-RULE" = {
+                  description  = "Allows inbound TCP from public load balancers."
+                  stateless    = false
+                  protocol     = "TCP"
+                  src          = "OKE-VCN-1-SERVICES-NSG"
+                  src_type     = "NETWORK_SECURITY_GROUP"
+                  dst_port_min = 30000
+                  dst_port_max = 32767
+                }
               },
               upper(var.oke_vcn1_cni_type) == "FLANNEL" ? {
                 "INGRESS-FROM-MGMT-WORKERS-AD1-RULE" = {
@@ -1100,52 +1111,63 @@ locals {
               local.oke_vcn_1_to_db_subnet_cross_vcn_egress
             )
             ingress_rules = merge({
-              "INGRESS-FROM-WORKERS-AD1-ALL-WORKERS-AD2-RULE" = {
-                description = "Allows all inbound traffic from worker nodes."
-                stateless   = false
-                protocol    = "ALL"
-                src         = "OKE-VCN-1-WORKERS-AD1-NSG"
-                src_type    = "NETWORK_SECURITY_GROUP"
-              }
-              "INGRESS-FROM-WORKERS-AD2-ALL-WORKERS-AD2-RULE" = {
-                description = "Allows all inbound traffic from worker nodes."
-                stateless   = false
-                protocol    = "ALL"
-                src         = "OKE-VCN-1-WORKERS-AD2-NSG"
-                src_type    = "NETWORK_SECURITY_GROUP"
-              }
-              "INGRESS-FROM-WORKERS-AD3-ALL-WORKERS-AD2-RULE" = {
-                description = "Allows all inbound traffic from worker nodes."
-                stateless   = false
-                protocol    = "ALL"
-                src         = "OKE-VCN-1-WORKERS-AD3-NSG"
-                src_type    = "NETWORK_SECURITY_GROUP"
-              }
-              "INGRESS-FROM-API-WORKERS-AD2-RULE" = {
-                description = "Allows all inbound traffic from OKE control plane for webhooks served by workers."
-                stateless   = false
-                protocol    = "ALL"
-                src         = "OKE-VCN-1-API-NSG"
-                src_type    = "NETWORK_SECURITY_GROUP"
-              }
-              "INGRESS-FROM-LB-10256-WORKERS-AD2-RULE" = {
-                description  = "Allows inbound TCP for health check from public load balancers."
+              for cidr in var.oke_vcn1_api_subnet_allowed_cidrs : "INGRESS-FROM-${cidr}-AD2-RULE" => {
+                description  = "Ingress from ${cidr} on port 6443."
                 stateless    = false
                 protocol     = "TCP"
-                src          = "OKE-VCN-1-SERVICES-NSG"
-                src_type     = "NETWORK_SECURITY_GROUP"
-                dst_port_min = 10256
-                dst_port_max = 10256
+                src          = cidr
+                src_type     = "CIDR_BLOCK"
+                dst_port_min = 22
+                dst_port_max = 22
               }
-              "INGRESS-FROM-LB-TCP-WORKERS-AD2-RULE" = {
-                description  = "Allows inbound TCP from public load balancers."
-                stateless    = false
-                protocol     = "TCP"
-                src          = "OKE-VCN-1-SERVICES-NSG"
-                src_type     = "NETWORK_SECURITY_GROUP"
-                dst_port_min = 30000
-                dst_port_max = 32767
-              }
+              },
+              {
+                "INGRESS-FROM-WORKERS-AD1-ALL-WORKERS-AD2-RULE" = {
+                  description = "Allows all inbound traffic from worker nodes."
+                  stateless   = false
+                  protocol    = "ALL"
+                  src         = "OKE-VCN-1-WORKERS-AD1-NSG"
+                  src_type    = "NETWORK_SECURITY_GROUP"
+                }
+                "INGRESS-FROM-WORKERS-AD2-ALL-WORKERS-AD2-RULE" = {
+                  description = "Allows all inbound traffic from worker nodes."
+                  stateless   = false
+                  protocol    = "ALL"
+                  src         = "OKE-VCN-1-WORKERS-AD2-NSG"
+                  src_type    = "NETWORK_SECURITY_GROUP"
+                }
+                "INGRESS-FROM-WORKERS-AD3-ALL-WORKERS-AD2-RULE" = {
+                  description = "Allows all inbound traffic from worker nodes."
+                  stateless   = false
+                  protocol    = "ALL"
+                  src         = "OKE-VCN-1-WORKERS-AD3-NSG"
+                  src_type    = "NETWORK_SECURITY_GROUP"
+                }
+                "INGRESS-FROM-API-WORKERS-AD2-RULE" = {
+                  description = "Allows all inbound traffic from OKE control plane for webhooks served by workers."
+                  stateless   = false
+                  protocol    = "ALL"
+                  src         = "OKE-VCN-1-API-NSG"
+                  src_type    = "NETWORK_SECURITY_GROUP"
+                }
+                "INGRESS-FROM-LB-10256-WORKERS-AD2-RULE" = {
+                  description  = "Allows inbound TCP for health check from public load balancers."
+                  stateless    = false
+                  protocol     = "TCP"
+                  src          = "OKE-VCN-1-SERVICES-NSG"
+                  src_type     = "NETWORK_SECURITY_GROUP"
+                  dst_port_min = 10256
+                  dst_port_max = 10256
+                }
+                "INGRESS-FROM-LB-TCP-WORKERS-AD2-RULE" = {
+                  description  = "Allows inbound TCP from public load balancers."
+                  stateless    = false
+                  protocol     = "TCP"
+                  src          = "OKE-VCN-1-SERVICES-NSG"
+                  src_type     = "NETWORK_SECURITY_GROUP"
+                  dst_port_min = 30000
+                  dst_port_max = 32767
+                }
               },
               upper(var.oke_vcn1_cni_type) == "FLANNEL" ? {
                 "INGRESS-FROM-MGMT-WORKERS-AD2-RULE" = {
@@ -1296,52 +1318,63 @@ locals {
               local.oke_vcn_1_to_db_subnet_cross_vcn_egress
             )
             ingress_rules = merge({
-              "INGRESS-FROM-WORKERS-AD1-ALL-WORKERS-AD3-RULE" = {
-                description = "Allows all inbound traffic from worker nodes."
-                stateless   = false
-                protocol    = "ALL"
-                src         = "OKE-VCN-1-WORKERS-AD1-NSG"
-                src_type    = "NETWORK_SECURITY_GROUP"
-              }
-              "INGRESS-FROM-WORKERS-AD2-ALL-WORKERS-AD3-RULE" = {
-                description = "Allows all inbound traffic from worker nodes."
-                stateless   = false
-                protocol    = "ALL"
-                src         = "OKE-VCN-1-WORKERS-AD2-NSG"
-                src_type    = "NETWORK_SECURITY_GROUP"
-              }
-              "INGRESS-FROM-WORKERS-AD3-ALL-WORKERS-AD3-RULE" = {
-                description = "Allows all inbound traffic from worker nodes."
-                stateless   = false
-                protocol    = "ALL"
-                src         = "OKE-VCN-1-WORKERS-AD3-NSG"
-                src_type    = "NETWORK_SECURITY_GROUP"
-              }
-              "INGRESS-FROM-API-WORKERS-AD3-RULE" = {
-                description = "Allows all inbound traffic from OKE control plane for webhooks served by workers."
-                stateless   = false
-                protocol    = "ALL"
-                src         = "OKE-VCN-1-API-NSG"
-                src_type    = "NETWORK_SECURITY_GROUP"
-              }
-              "INGRESS-FROM-LB-10256-WORKERS-AD3-RULE" = {
-                description  = "Allows inbound TCP for health check from public load balancers."
+              for cidr in var.oke_vcn1_api_subnet_allowed_cidrs : "INGRESS-FROM-${cidr}-AD3-RULE" => {
+                description  = "Ingress from ${cidr} on port 6443."
                 stateless    = false
                 protocol     = "TCP"
-                src          = "OKE-VCN-1-SERVICES-NSG"
-                src_type     = "NETWORK_SECURITY_GROUP"
-                dst_port_min = 10256
-                dst_port_max = 10256
+                src          = cidr
+                src_type     = "CIDR_BLOCK"
+                dst_port_min = 22
+                dst_port_max = 22
               }
-              "INGRESS-FROM-LB-TCP-WORKERS-AD3-RULE" = {
-                description  = "Allows inbound TCP from public load balancers."
-                stateless    = false
-                protocol     = "TCP"
-                src          = "OKE-VCN-1-SERVICES-NSG"
-                src_type     = "NETWORK_SECURITY_GROUP"
-                dst_port_min = 30000
-                dst_port_max = 32767
-              }
+              },
+              {
+                "INGRESS-FROM-WORKERS-AD1-ALL-WORKERS-AD3-RULE" = {
+                  description = "Allows all inbound traffic from worker nodes."
+                  stateless   = false
+                  protocol    = "ALL"
+                  src         = "OKE-VCN-1-WORKERS-AD1-NSG"
+                  src_type    = "NETWORK_SECURITY_GROUP"
+                }
+                "INGRESS-FROM-WORKERS-AD2-ALL-WORKERS-AD3-RULE" = {
+                  description = "Allows all inbound traffic from worker nodes."
+                  stateless   = false
+                  protocol    = "ALL"
+                  src         = "OKE-VCN-1-WORKERS-AD2-NSG"
+                  src_type    = "NETWORK_SECURITY_GROUP"
+                }
+                "INGRESS-FROM-WORKERS-AD3-ALL-WORKERS-AD3-RULE" = {
+                  description = "Allows all inbound traffic from worker nodes."
+                  stateless   = false
+                  protocol    = "ALL"
+                  src         = "OKE-VCN-1-WORKERS-AD3-NSG"
+                  src_type    = "NETWORK_SECURITY_GROUP"
+                }
+                "INGRESS-FROM-API-WORKERS-AD3-RULE" = {
+                  description = "Allows all inbound traffic from OKE control plane for webhooks served by workers."
+                  stateless   = false
+                  protocol    = "ALL"
+                  src         = "OKE-VCN-1-API-NSG"
+                  src_type    = "NETWORK_SECURITY_GROUP"
+                }
+                "INGRESS-FROM-LB-10256-WORKERS-AD3-RULE" = {
+                  description  = "Allows inbound TCP for health check from public load balancers."
+                  stateless    = false
+                  protocol     = "TCP"
+                  src          = "OKE-VCN-1-SERVICES-NSG"
+                  src_type     = "NETWORK_SECURITY_GROUP"
+                  dst_port_min = 10256
+                  dst_port_max = 10256
+                }
+                "INGRESS-FROM-LB-TCP-WORKERS-AD3-RULE" = {
+                  description  = "Allows inbound TCP from public load balancers."
+                  stateless    = false
+                  protocol     = "TCP"
+                  src          = "OKE-VCN-1-SERVICES-NSG"
+                  src_type     = "NETWORK_SECURITY_GROUP"
+                  dst_port_min = 30000
+                  dst_port_max = 32767
+                }
               },
               upper(var.oke_vcn1_cni_type) == "FLANNEL" ? {
                 "INGRESS-FROM-MGMT-WORKERS-AD3-RULE" = {
